@@ -113,7 +113,7 @@ function Goals() {
             </div>
           );
         })) : (
-            <div className="text-center w-screen text-3xl mt-10">No Goal found</div>
+            <div className="text-center w-screen text-3xl mt-10">No  found</div>
         )}
         
       </div>
