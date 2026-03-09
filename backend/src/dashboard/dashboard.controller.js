@@ -85,12 +85,22 @@ let totalBalance = totalIncome - totalExpence;
           : 0;
 
         let thisMonthSavings = thisMonthTotalIncome - thisMonthTotalExpence;
-        let thisMonthRate= Math.floor((thisMonthSavings / thisMonthTotalIncome)*100)
+        let thisMonthRate =
+          thisMonthTotalIncome > 0
+            ? Math.floor((thisMonthSavings / thisMonthTotalIncome) * 100)
+            : 0;
 
 
            let LastMonthSavings = lastMonthTotalIncome- lastMonthTotalExpence
-            let LastMonthRate= Math.floor((LastMonthSavings / lastMonthTotalIncome)* 100)
+      let LastMonthRate = lastMonthTotalIncome > 0
+        ? Math.floor((LastMonthSavings / lastMonthTotalIncome) * 100) : 0;
       let improvement = thisMonthRate - LastMonthRate
+
+      const recentTransactions = await transectionData
+        .find({ userId: id })
+        .sort({ date: -1 })
+        .limit(5) 
+        .lean();
       
       const report = await transectionData.aggregate([
         { $match: { userId: new mongoose.Types.ObjectId(id) } },
@@ -124,12 +134,12 @@ let totalBalance = totalIncome - totalExpence;
             },
           },
         },
-        { $sort: { "_id.year": 1, "_id.month": 1 } }, // ক্রমানুসারে সাজানো
+        { $sort: { "_id.year": 1, "_id.month": 1 } },
       ]);
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     
     const formattedData = report.map(item => ({
-      name: monthNames[item._id.month - 1], // মাসের নাম্বার থেকে নাম নেওয়া
+      name: monthNames[item._id.month - 1],
       income: item.totalincome,
       expense: item.totalexpense
     }));
@@ -196,6 +206,7 @@ let totalBalance = totalIncome - totalExpence;
             pieChart,
             topPieChart,
           },
+          recentTransactions,
         });
     }    
      catch (error) {

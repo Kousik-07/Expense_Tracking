@@ -33,96 +33,97 @@ function Transactions() {
   const [sortFilter, setSortFilter] = useState("newest");
   const [pageData, setPageData] = useState([]);
 
-
-  const { data: transections, error } = useSWR(
-    "/api/transection/get",
-    fetcher
-  );
-// console.log("DATA =", transections);
-// console.log("ERROR =", error);
-// console.log(editData);
-
-//filter logic---------------------------
- const filteredTransactions = useMemo(() => {
-   if (!transections) return [];
-
-   let data = [...transections];
-
-   const now = new Date();
-
-   // 📅 Date filter
-   if (dateFilter === "thisMonth") {
-     data = data.filter((t) => {
-       const d = new Date(t.date);
-       return (
-         d.getMonth() === now.getMonth() &&
-         d.getFullYear() === now.getFullYear()
-       );
-     });
-   } 
-
-   if (dateFilter === "lastMonth") {
-     data = data.filter((t) => {
-       const d = new Date(t.date);
-       const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-       return (
-         d.getMonth() === lastMonth.getMonth() &&
-         d.getFullYear() === lastMonth.getFullYear()
-       );
-     });
-   }
-
-   if (dateFilter === "last3Months") {
-     data = data.filter((t) => {
-       const d = new Date(t.date);
-       const sixMonthsAgo = new Date();
-       sixMonthsAgo.setMonth(now.getMonth() - 3);
-       return d >= sixMonthsAgo && d <= now;
-     });
-   }
-   if (dateFilter === "last6Months") {
-     data = data.filter((t) => {
-       const d = new Date(t.date);
-       const sixMonthsAgo = new Date();
-       sixMonthsAgo.setMonth(now.getMonth() - 6);
-       return d >= sixMonthsAgo && d <= now;
-     });
-   }
-
-   if (dateFilter === "thisYear") {
-     data = data.filter(
-       (t) => new Date(t.date).getFullYear() === now.getFullYear()
-     );
-   }
-
-   // 🏷 Category filter
-   if (categoryFilter) {
-     data = data.filter((t) => t.category === categoryFilter);
-   }
-
-   // 💰 Type filter
-   if (typeFilter) {
-     data = data.filter((t) => t.transectionTypes === typeFilter);
-   }
-
-   // 🔽 Sorting
-   if (sortFilter === "newest") {
-     data.sort((a, b) => new Date(b.date) - new Date(a.date));
-   }
-   if (sortFilter === "oldest") {
-     data.sort((a, b) => new Date(a.date) - new Date(b.date));
-   }
-   if (sortFilter === "amountHigh") {
-     data.sort((a, b) => b.amount - a.amount);
-   }
-   if (sortFilter === "amountLow") {
-     data.sort((a, b) => a.amount - b.amount);
-   }
+  const { data: transections, error } = useSWR("/api/transection/get", fetcher);
 
 
-   return data;
- }, [transections, dateFilter, categoryFilter, typeFilter, sortFilter]);
+  //filter logic---------------------------
+  const filteredTransactions = useMemo(() => {
+    if (!transections) return [];
 
+    let data = [...transections];
+
+    const now = new Date();
+
+    // 📅 Date filter
+    if (dateFilter === "thisMonth") {
+      data = data.filter((t) => {
+        const d = new Date(t.date);
+        return (
+          d.getMonth() === now.getMonth() &&
+          d.getFullYear() === now.getFullYear()
+        );
+      });
+    }
+
+    if (dateFilter === "lastMonth") {
+      data = data.filter((t) => {
+        const d = new Date(t.date);
+        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        return (
+          d.getMonth() === lastMonth.getMonth() &&
+          d.getFullYear() === lastMonth.getFullYear()
+        );
+      });
+    }
+
+    if (dateFilter === "last3Months") {
+      data = data.filter((t) => {
+        const d = new Date(t.date);
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(now.getMonth() - 3);
+        return d >= sixMonthsAgo && d <= now;
+      });
+    }
+    if (dateFilter === "last6Months") {
+      data = data.filter((t) => {
+        const d = new Date(t.date);
+        const sixMonthsAgo = new Date();
+        sixMonthsAgo.setMonth(now.getMonth() - 6);
+        return d >= sixMonthsAgo && d <= now;
+      });
+    }
+
+    if (dateFilter === "thisYear") {
+      data = data.filter(
+        (t) => new Date(t.date).getFullYear() === now.getFullYear()
+      );
+    }
+
+    // 🏷 Category filter
+    if (categoryFilter) {
+      data = data.filter((t) => t.category === categoryFilter);
+    }
+
+    // 💰 Type filter
+    if (typeFilter) {
+      data = data.filter((t) => t.transectionTypes === typeFilter);
+    }
+
+    // 🔽 Sorting
+    if (sortFilter === "newest") {
+      data.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+    if (sortFilter === "oldest") {
+      data.sort((a, b) => new Date(a.date) - new Date(b.date));
+    }
+    if (sortFilter === "amountHigh") {
+      data.sort((a, b) => b.amount - a.amount);
+    }
+    if (sortFilter === "amountLow") {
+      data.sort((a, b) => a.amount - b.amount);
+    }
+
+    return data;
+  }, [transections, dateFilter, categoryFilter, typeFilter, sortFilter]);
+
+  // formatINR
+  const formatINR = (amount) => {
+    let amountINR = amount.toLocaleString("en-IN", {
+      style: "currency",
+      currency: "INR",
+    });
+    return amountINR;
+  };
 
   const onDelete = async (id) => {
     const result = await MySwal.fire({
@@ -148,20 +149,19 @@ function Transactions() {
     }
   };
 
-
- const categoryIcons = {
-   food: <FaUtensils />,
-   shopping: <FaShoppingBag />,
-   transport: <FaCar />,
-   salary: <FaMoneyBillWave />,
-   freelance: <FaLaptop />,
-   health: <FaHeartbeat />,
-   savings: <FaPiggyBank />,
-   bills: <FaFileInvoiceDollar />,
- };
+  const categoryIcons = {
+    food: <FaUtensils />,
+    shopping: <FaShoppingBag />,
+    transport: <FaCar />,
+    salary: <FaMoneyBillWave />,
+    freelance: <FaLaptop />,
+    health: <FaHeartbeat />,
+    savings: <FaPiggyBank />,
+    bills: <FaFileInvoiceDollar />,
+  };
 
   // const type = editData.type;
-  
+
   return (
     <div className="relative min-h-screen">
       <div className="p-10">
@@ -252,7 +252,7 @@ function Transactions() {
                       </td>
 
                       <td>{row.description}</td>
-                      <td>{row.amount}</td>
+                      <td>{formatINR(row.amount)}</td>
                       <td>
                         <span
                           className={` px-3 py-1 rounded-full text-sm ${

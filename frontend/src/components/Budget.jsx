@@ -37,7 +37,7 @@ function Budget() {
   const budgets = data?.budget 
   const chartData = data?.chart 
   const pieData = data?.pie 
-  console.log(pieData);
+
   
 
 
@@ -79,6 +79,23 @@ function Budget() {
         });
       }
 
+       if (dateFilter === "last6Months") {
+         data = data.filter((t) => {
+           const d = new Date(t.date);
+           const sixMonthsAgo = new Date();
+           sixMonthsAgo.setMonth(now.getMonth() - 6);
+           return d >= sixMonthsAgo && d <= now;
+         });
+       }
+       if (dateFilter === "last3Months") {
+         data = data.filter((t) => {
+           const d = new Date(t.date);
+           const sixMonthsAgo = new Date();
+           sixMonthsAgo.setMonth(now.getMonth() - 3);
+           return d >= sixMonthsAgo && d <= now;
+         });
+       }
+
       if (dateFilter === "thisYear") {
         data = data.filter(
           (t) => new Date(t.date).getFullYear() === now.getFullYear()
@@ -101,6 +118,7 @@ function Budget() {
 
   const { budgetFilter, spendFilter } = filteredBudget;
 
+// console.log(budgetFilter);
 
   
 
@@ -197,6 +215,7 @@ budgetFilter.forEach((e) => {
         >
           <option value="thisMonth">This Month</option>
           <option value="lastMonth">Last Month</option>
+          <option value="last3Months">Last 3 Months</option>
           <option value="last6Months">Last 6 Months</option>
           <option value="thisYear">This Year</option>
           <option value="all">All Time</option>
@@ -222,12 +241,11 @@ budgetFilter.forEach((e) => {
         <div className="bg-white p-6 rounded-xl shadow">
           <p className="text-gray-500 text-sm">Total Budget</p>
           <h2 className="text-2xl font-bold mt-2">{formatINR(Totalbudget)}</h2>
-          <p className="text-green-500 text-sm mt-2">for Oct 2025</p>
+
         </div>
         <div className="bg-white p-6 rounded-xl shadow">
           <p className="text-gray-500 text-sm">Total Spent</p>
           <h2 className="text-2xl font-bold mt-2">{formatINR(Totalspends)}</h2>
-          <p className="text-red-500 text-sm mt-2">-8%</p>
         </div>
         <div className="bg-white p-6 rounded-xl shadow">
           <p className="text-gray-500 text-sm">Remaining</p>

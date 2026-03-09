@@ -9,6 +9,7 @@ import jsPDF from 'jspdf'
 import autoTable from 'jspdf-autotable'
 
 
+
 function Reports() {
   const [report, setReport] = useState(null);
   const [dateFilter, setDateFilter] = useState("thisMonth");
@@ -19,7 +20,7 @@ function Reports() {
         try {
           const res = await http.get("/api/dashboard/dashboardreport");
           setReport(res.data);
-          console.log(res);
+          // console.log(res);
         } catch (err) {
           console.error(err.message);
         }
@@ -110,7 +111,7 @@ function Reports() {
      return data;
    }, [transections, dateFilter, sortFilter, typeFilter]);
 
-  console.log(filteredTransactions);
+  // console.log(filteredTransactions);
   
   //PDF Export-------------------------------------
   const handleDownloadPDF = () => {
@@ -155,6 +156,7 @@ function Reports() {
 
   return (
     <div className="p-10">
+
       {/* HEADER */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-semibold">Reports / Analytics</h2>

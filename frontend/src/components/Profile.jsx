@@ -41,62 +41,7 @@ function Profile() {
             </Link>
           </div>
         </div>
-        {/* SETTINGS CARD */}
-        <div className="bg-white rounded-xl shadow p-8">
-          <div className="space-y-4 text-gray-700">
-            <div className="flex justify-between">
-              <span className="font-medium">Preferred Currency:</span>
-              <span>INR (₹)</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-medium">Language:</span>
-              <span>English (EN)</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-medium">Monthly Start Date:</span>
-              <span>1st of every month</span>
-            </div>
-            {/* NOTIFICATION */}
-            <div>
-              <p className="font-medium mb-2">Notifications Preferences:</p>
-              <div className="space-y-2 ml-2">
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="accent-green-500"
-                  />
-                  Budget Limit Alerts
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="accent-green-500"
-                  />
-                  Goal Reminders
-                </label>
-                <label className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="accent-green-500"
-                  />
-                  Weekly Summary Emails
-                </label>
-              </div>
-            </div>
-          </div>
-          {/* ACTION BUTTONS */}
-          <div className="flex gap-4 mt-8">
-            <button className="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600">
-              Export Data
-            </button>
-            <button className="bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600">
-              Clear All Data
-            </button>
-          </div>
-        </div>
+      
       </div>
     </div>
   );
