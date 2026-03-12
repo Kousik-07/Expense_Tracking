@@ -4,7 +4,8 @@ import http from '../utils/http';
 import { Button, Form, Input, message } from "antd";
 import Password from 'antd/es/input/Password';
 import {toast} from "react-toastify"
-import { FcGoogle } from "react-icons/fc";
+
+import GoogleAuth from './Shared/GoogleAuth';
 function Signup() {
   const [signupForm]=Form.useForm()
   const [formData,setFormData]=useState(null)
@@ -74,9 +75,7 @@ function Signup() {
             </h2>
             {/* Google Icon */}
             <div className="flex justify-center mb-4">
-              <div className="w-10 h-10 flex items-center justify-center border rounded-full text-2xl">
-                <FcGoogle/>
-              </div>
+              <GoogleAuth/>
             </div>
             <p className="text-center text-gray-400 text-sm mb-6">
               or use your email for registration

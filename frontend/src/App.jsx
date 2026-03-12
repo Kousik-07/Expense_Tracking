@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import Guard from './Guard/Guard';
 import { lazy, Suspense } from 'react';
 import Loader from './components/Shared/Loader';
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const AppLayout =lazy(()=>import('./components/Applayout/AppLayout'))
 const Home =lazy(()=>import('./components/Home')) 
@@ -88,10 +89,12 @@ function App() {
 
   return (
     <>
-      <Suspense fallback={<Loader/>}>
-        <RouterProvider router={router} />
-      </Suspense>
-      <ToastContainer />
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <Suspense fallback={<Loader />}>
+          <RouterProvider router={router} />
+        </Suspense>
+        <ToastContainer />
+      </GoogleOAuthProvider>
     </>
   );
 }

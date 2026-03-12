@@ -3,7 +3,7 @@ import {  Link, redirect, useNavigate } from 'react-router-dom';
 import { Button, Form, Input, message } from "antd";
 import http from '../utils/http';
 import { toast } from 'react-toastify';
-import { FcGoogle } from "react-icons/fc";
+import GoogleAuth from './Shared/GoogleAuth';
 function Login() {
 
   const [loginForm] = Form.useForm()
@@ -33,9 +33,7 @@ function Login() {
           </h2>
           {/* Google Button */}
           <div className="flex justify-center mb-4">
-            <div className="w-10 h-10 border rounded-full flex items-center justify-center text-2xl">
-              <FcGoogle />
-            </div>
+            <GoogleAuth/>
           </div>
           <p className="text-gray-400 text-sm text-center mb-6">
             or use your account

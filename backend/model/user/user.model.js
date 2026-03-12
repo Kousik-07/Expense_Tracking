@@ -3,12 +3,10 @@ import bcrypt from "bcrypt"
 const mymodel = mongoose.Schema({
     fullname: {
         type: String,
-        required: true,
         lowercase:true
     },
     mobile: {
         type: String,
-        required: true,
         lowercase:true
     },
     email: {
@@ -19,7 +17,6 @@ const mymodel = mongoose.Schema({
     },
     password: {
         type: String,
-        required: true,
     },
     status: {
         type: Boolean,

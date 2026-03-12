@@ -5,6 +5,8 @@ import { sendMail } from "../../utils/mail.js";
 import { otpTemplate } from "../../utils/otpTemplates.js";
 import { generateOtp } from "../../utils/generateOTP.js";
 import { forgotPasswordTemplate } from "../../utils/forgetPasswordTemplates.js";
+import { google } from "googleapis";
+import { oauth2client } from "../../utils/googleConfig.js";
 export const createuser = async (req, res) => {
     try {
         const data = req.body;
@@ -143,5 +145,50 @@ export const getData = async (req, res) => {
    res.json(user)
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+export const googleLogin = async (req, res) => {
+  try {
+    const { code } = req.body;
+
+    if (!code) {
+      return res.status(400).json({ message: "Authorization code is missing" });
+    }
+
+    const { tokens } = await oauth2client.getToken(code);
+    oauth2client.setCredentials(tokens);
+
+    const oauth2 = google.oauth2({ version: "v2", auth: oauth2client });
+    const { data } = await oauth2.userinfo.get();
+
+    let user = await userdata.findOne({ email: data.email });
+
+    if (!user) {
+      user = new userdata({
+        fullname: data.name,
+        email: data.email
+      });
+      await user.save();
+    }
+
+    const token = await createToken(user);
+
+    res.cookie("authToken", token, {
+      maxAge: 86400000,
+      httpOnly: true,
+      secure: process.env.ENVIROMENT !== "DEV",
+      sameSite: process.env.ENVIROMENT === "DEV" ? "lax" : "none",
+      path: "/",
+    });
+
+    res.json({
+      message: "Google Login Successful",
+      user: { fullname: user.fullname, email: user.email },
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Google Auth error", error: error.message });
   }
 };

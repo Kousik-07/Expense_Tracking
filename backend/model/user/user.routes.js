@@ -8,6 +8,7 @@ import {
   changePassword,
   logOut,
   getData,
+  googleLogin,
 } from "./user.controller.js";
 import { userGuird, verifyTokenGuird } from "../../src/middleWare/guird.middle.js";
 
@@ -23,5 +24,6 @@ router.get("/session", userGuird, (req, res) => {
 });
 router.post("/verify-token",verifyTokenGuird, verifyToken);
 router.put("/change-password", verifyTokenGuird, changePassword);
+router.post("/google-login",googleLogin)
 
 export default router;
