@@ -65,8 +65,8 @@ export const login = async (req, res) => {
 
           maxAge: 86400000,
           domain: undefined,
-          secure: process.env.ENVIROMENT !== "DEV",
-            sameSite: process.env.ENVIROMENT === "DEV" ? "lax" : "none",
+          secure: true,       
+          sameSite: "none",    
             path:"/",
           httpOnly:true
           
