@@ -241,7 +241,6 @@ budgetFilter.forEach((e) => {
         <div className="bg-white p-6 rounded-xl shadow">
           <p className="text-gray-500 text-sm">Total Budget</p>
           <h2 className="text-2xl font-bold mt-2">{formatINR(Totalbudget)}</h2>
-
         </div>
         <div className="bg-white p-6 rounded-xl shadow">
           <p className="text-gray-500 text-sm">Total Spent</p>
@@ -372,11 +371,15 @@ budgetFilter.forEach((e) => {
         <div className="bg-white p-6 rounded-xl shadow">
           <h4 className="font-semibold mb-3">Budget vs Spending Over Time</h4>
           <div className="h-90 w-full border flex items-center justify-center text-gray-400 rounded">
-            <ChartLine
-              transectionchart={chartData}
-              dataKey1="budget"
-              dataKey2="spending"
-            />
+            {chartData && chartData.length > 0 ? (
+              <ChartLine
+                transectionchart={chartData}
+                dataKey1="budget"
+                dataKey2="spending"
+              />
+            ) : (
+              <div className="text-gray-400">Loading chart...</div>
+            )}
           </div>
         </div>
         <div className="bg-white p-6 rounded-xl shadow">
@@ -384,11 +387,15 @@ budgetFilter.forEach((e) => {
             Category-wise Budget Allocation
           </h4>
           <div className="h-90 border flex items-center justify-center text-gray-400 rounded">
-            <ChartPie
-              data={pieData}
-              dataKey2={pieData?.value}
-              dataKey1={pieData?.name}
-            />
+            {pieData && pieData.length > 0 ? (
+              <ChartPie
+                data={pieData}
+                dataKey1={pieData?.name}
+                dataKey2={pieData?.value}
+              />
+            ) : (
+              <div className="text-gray-400">Loading chart...</div>
+            )}
           </div>
         </div>
       </div>

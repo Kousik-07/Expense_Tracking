@@ -20,7 +20,7 @@ function Goals() {
     "/api/dashboard/dashboardreport",
     fetcher
   )
-  const TotalSaving = totalSaving?.summary.totalBalance;
+  const TotalSaving = totalSaving?.summary?.totalBalance;
   //delete function
  const onDelete = async (id) => {
    const result = await MySwal.fire({

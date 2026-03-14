@@ -27,8 +27,8 @@ const recentTransection = report?.recentTransactions;
   
 
   const summary = report?.summary;
-  const chart = report?.chart.formattedData;
-  const piechart = report?.chart.pieChart;
+  const chart = report?.chart?.formattedData;
+  const piechart = report?.chart?.pieChart;
   // console.log(piechart);
 
   const isIncomeUp = summary?.incomeRate >= 0;

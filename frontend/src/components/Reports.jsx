@@ -28,9 +28,9 @@ function Reports() {
 
       fetchReport();
     }, []);
-  const chart = report?.chart.formattedData;
-  const barChart = report?.chart.pieChart;
-  const topChart = report?.chart.topPieChart;
+  const chart = report?.chart?.formattedData;
+  const barChart = report?.chart?.pieChart;
+  const topChart = report?.chart?.topPieChart;
 
   const { data: transections, error } = useSWR(
     "/api/transection/get",
@@ -221,11 +221,15 @@ function Reports() {
           </div>
 
           <div className="h-64 md:h-90 border rounded flex items-center justify-center text-gray-400">
-            <ChartLine
-              transectionchart={chart}
-              dataKey1="income"
-              dataKey2="expense"
-            />
+            {chart && chart.length > 0 ? (
+              <ChartLine
+                transectionchart={chart}
+                dataKey1="income"
+                dataKey2="expense"
+              />
+            ) : (
+              <div className="text-gray-400">Loading...</div>
+            )}
           </div>
         </div>
 
@@ -234,7 +238,11 @@ function Reports() {
           <h4 className="font-semibold mb-3">Spending by Category</h4>
 
           <div className="h-64 md:h-90 border rounded flex items-center justify-center text-gray-400">
-            <ChartBar data={barChart} dataKeyX="name" dataKeyY="value" />
+            {barChart && barChart.length > 0 ? (
+              <ChartBar data={barChart} dataKeyX="name" dataKeyY="value" />
+            ) : (
+              <div className="text-gray-400">Loading...</div>
+            )}
           </div>
         </div>
       </div>
@@ -244,7 +252,11 @@ function Reports() {
         <h4 className="font-semibold mb-3">Top 5 Expenses</h4>
 
         <div className="h-64 md:h-90 border rounded flex items-center justify-center text-gray-400">
-          <ChartPie data={topChart} dataKey1="category" dataKey2="amount" />
+          {topChart && topChart.length > 0 ? (
+            <ChartPie data={topChart} dataKey1="category" dataKey2="amount" />
+          ) : (
+            <div className="text-gray-400">Loading...</div>
+          )}
         </div>
       </div>
     </div>
