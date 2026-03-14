@@ -102,22 +102,26 @@ const recentTransection = report?.recentTransactions;
             <div className="bg-white p-6 rounded-xl shadow">
               <h3 className="font-semibold mb-3">Income vs Expense</h3>
               <div className="h-90 w-full flex items-center justify-center  border rounded-lg">
-                <ChartLine
-                  transectionchart={chart}
-                  dataKey1="income"
-                  dataKey2="expense"
-                />
+                {chart ? (
+                  <ChartLine
+                    transectionchart={chart}
+                    dataKey1="income"
+                    dataKey2="expense"
+                  />
+                ) : (
+                  <p className="text-gray-400">Loading chart...</p>
+                )}
               </div>
             </div>
             {/* PIE PLACEHOLDER */}
             <div className="bg-white p-6 rounded-xl shadow">
               <h3 className="font-semibold mb-3">Expense Breakdown</h3>
               <div className="h-90 flex items-center justify-center text-gray-400 border rounded-lg">
-                <ChartPie
-                  data={piechart}
-                  dataKey1={piechart?.name}
-                  dataKey2={piechart?.value}
-                />
+                {piechart ? (
+                  <ChartPie data={piechart} dataKey1="name" dataKey2="value" />
+                ) : (
+                  <p>Loading chart...</p>
+                )}
               </div>
             </div>
           </div>
