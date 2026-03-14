@@ -42,7 +42,6 @@ function AddGoal({ title, buttonText, defaultData, onClose }) {
                   <input
                     type="date"
                     name="date"
-                    // defaultValue={defaultData?.date?.slice(0, 10)}
                     className="w-full border rounded-xl px-12 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
                   />
                 </div>
@@ -50,7 +49,6 @@ function AddGoal({ title, buttonText, defaultData, onClose }) {
                 <input
                   type="text"
                   name="goalName"
-                  //   defaultValue={defaultData?.description}
                   placeholder="Goal Name"
                   className="w-72 border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
                 />
@@ -75,7 +73,6 @@ function AddGoal({ title, buttonText, defaultData, onClose }) {
                 <input
                   type="number"
                   name="targetAmount"
-                  // defaultValue={defaultData?.amount}
                   placeholder="Target Amount"
                   className="w-52 border rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-400"
                 />

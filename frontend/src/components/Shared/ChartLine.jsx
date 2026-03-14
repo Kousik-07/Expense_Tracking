@@ -8,7 +8,6 @@ function ChartLine({ transectionchart,dataKey1,dataKey2 }) {
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={transectionchart}>
           <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-          {/* <CartesianGrid strokeDasharray="3 3" /> */}
           <XAxis dataKey="name" stroke="#ccc" />
           <YAxis width={50} tickCount={5} stroke="#ccc" />
           <Tooltip />
@@ -20,7 +19,6 @@ function ChartLine({ transectionchart,dataKey1,dataKey2 }) {
             activeDot={{ r: 8 }}
           />
           <Line type="monotone" dataKey={dataKey2} stroke="#82ca9d" />
-          {/* <Line type="monotone" dataKey="expense" stroke="#82ca9d" /> */}
         </LineChart>
       </ResponsiveContainer>
     </div>

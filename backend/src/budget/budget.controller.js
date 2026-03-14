@@ -53,10 +53,7 @@ export const getBudget = async (req, res) => {
       const { id } = req.user;
       const databudget = await budgetData.find({ userId: id })
       const chartData = await budgetData.aggregate([
-        // 1. Match specific User
         { $match: { userId: new mongoose.Types.ObjectId(id) } },
-
-        // 2. Budget theke month ar year extract kora
         {
           $project: {
             month: { $dateToString: { format: "%b", date: "$date" } }, // 'Jan', 'Feb' etc
@@ -66,25 +63,22 @@ export const getBudget = async (req, res) => {
           },
         },
 
-        // 3. Month ar Year onujayi group kora (Budget sum kora)
         {
           $group: {
             _id: { month: "$month", monthNum: "$monthNum", year: "$year" },
             totalBudget: { $sum: "$limit" },
           },
         },
-
-        // 4. Transaction table theke data ana (userId logic shoho)
         {
           $lookup: {
-            from: "transections", // Database collection-er exact nam check korbe
+            from: "transections", 
             let: { b_month: "$_id.month", b_year: "$_id.year" },
             pipeline: [
               {
                 $match: {
                   $expr: {
                     $and: [
-                      { $eq: ["$userId", new mongoose.Types.ObjectId(id)] }, // Transaction-eo user check kora
+                      { $eq: ["$userId", new mongoose.Types.ObjectId(id)] },
                       {
                         $eq: [
                           { $dateToString: { format: "%b", date: "$date" } },
@@ -107,7 +101,6 @@ export const getBudget = async (req, res) => {
           },
         },
 
-        // 5. Final structure create kora
         {
           $project: {
             _id: 0,

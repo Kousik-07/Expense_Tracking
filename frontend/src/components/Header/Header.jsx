@@ -1,5 +1,4 @@
 import React from 'react'
-import { FaRegUserCircle } from "react-icons/fa";
 import { LuSquareMenu } from "react-icons/lu";
 import { useState } from "react";
 import { RxCrossCircled } from "react-icons/rx";
@@ -7,6 +6,8 @@ import {  NavLink, useNavigate } from 'react-router-dom';
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { toast } from 'react-toastify';
 import http from '../../utils/http';
+import useSWR from 'swr';
+import fetcher from '../../utils/fetcher';
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate=useNavigate()
@@ -19,9 +20,12 @@ function Header() {
       return toast.error(error.response ? error.response.data.message : error.message)
     }
   }
+
+  const { data: user, error } = useSWR("/api/user/getdata", fetcher);
+
   return (
     <div>
-      <nav className="bg-white shadow-sm px-10 py-4 flex justify-between items-center">
+      <nav className="bg-white shadow-sm px-10 py-2 flex justify-between items-center">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-bold text-gray-800">
             Fin<span className="text-green-500 text-4xl">Track</span>
@@ -81,13 +85,26 @@ function Header() {
         <div className="flex gap-6">
           <div className="profile text-3xl">
             <NavLink to={"profile"}>
-              <FaRegUserCircle />
+              <div className="flex justify-center mb-4">
+                {user?.profileImage ? (
+                  <img
+                    src={user.profileImage}
+                    alt="Profile"
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                    <span className="text-gray-400 text-lg">👤</span>
+                  </div>
+                )}
+              </div>
             </NavLink>
           </div>
           <button
-          onClick={logout}
-            className="logout text-3xl hidden md:flex cursor-pointer">
-              <RiLogoutCircleRLine />
+            onClick={logout}
+            className="logout text-3xl hidden md:flex cursor-pointer"
+          >
+            <RiLogoutCircleRLine />
           </button>
           <div className="text-3xl md:hidden">
             <button onClick={() => setMenuOpen(true)}>
@@ -169,10 +186,12 @@ function Header() {
           >
             Reports
           </NavLink>
-
         </ul>
-        <div className='flex justify-center pt-5'>
-          <button onClick={logout} className='bg-blue-400 text-white p-2 text-2xl rounded-xl'>
+        <div className="flex justify-center pt-5">
+          <button
+            onClick={logout}
+            className="bg-blue-400 text-white p-2 text-2xl rounded-xl"
+          >
             Log Out
           </button>
         </div>

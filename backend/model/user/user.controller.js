@@ -7,6 +7,7 @@ import { generateOtp } from "../../utils/generateOTP.js";
 import { forgotPasswordTemplate } from "../../utils/forgetPasswordTemplates.js";
 import { google } from "googleapis";
 import { oauth2client } from "../../utils/googleConfig.js";
+import { v2 as cloudinary } from "cloudinary";
 export const createuser = async (req, res) => {
     try {
         const data = req.body;
@@ -135,10 +136,23 @@ export const changePassword = async (req, res) => {
     }
 }
 
+export const updateUser = async (req, res) => {
+  try {
+    const data = req.body;
+    const { id } = req.params;
+    const updateuser = await userdata.findByIdAndUpdate(id, data, { new: true })
+    res.json(updateuser)
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: error.message || "Internal server problem" });
+  }
+}
+
 export const getData = async (req, res) => {
   try {
     
-      const user = await userdata.findById(req.user.id).select("fullname email");
+      const user = await userdata.findById(req.user.id);
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
@@ -148,47 +162,158 @@ export const getData = async (req, res) => {
   }
 };
 
+
 export const googleLogin = async (req, res) => {
   try {
     const { code } = req.body;
 
     if (!code) {
-      return res.status(400).json({ message: "Authorization code is missing" });
+      return res.status(400).json({
+        success: false,
+        message: "Authorization code is missing",
+      });
     }
 
+    // exchange authorization code for tokens
     const { tokens } = await oauth2client.getToken(code);
     oauth2client.setCredentials(tokens);
 
-    const oauth2 = google.oauth2({ version: "v2", auth: oauth2client });
+    // get user info from google
+    const oauth2 = google.oauth2({
+      version: "v2",
+      auth: oauth2client,
+    });
+
     const { data } = await oauth2.userinfo.get();
 
-    let user = await userdata.findOne({ email: data.email });
-
-    if (!user) {
-      user = new userdata({
-        fullname: data.name,
-        email: data.email
+    if (!data?.email) {
+      return res.status(400).json({
+        success: false,
+        message: "Google account email not found",
       });
-      await user.save();
     }
 
+    // check user in database
+    let user = await userdata.findOne({ email: data.email });
+
+    // create user if not exists
+    if (!user) {
+      user = await userdata.create({
+        fullname: data.name,
+        email: data.email,
+      });
+    }
+
+    // create jwt token
     const token = await createToken(user);
 
+    // set cookie
     res.cookie("authToken", token, {
-      maxAge: 86400000,
+      maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: process.env.ENVIROMENT !== "DEV",
-      sameSite: process.env.ENVIROMENT === "DEV" ? "lax" : "none",
+      secure: process.env.ENVIRONMENT === "PROD",
+      sameSite: process.env.ENVIRONMENT === "PROD" ? "none" : "lax",
       path: "/",
     });
 
-    res.json({
+    console.log("Auth Code:", code);
+    return res.status(200).json({
+      success: true,
       message: "Google Login Successful",
-      user: { fullname: user.fullname, email: user.email },
+      user: {
+        id: user._id,
+        fullname: user.fullname,
+        email: user.email,
+      },
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Google Auth error", error: error.message });
+    console.error("Google Auth Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Google authentication failed",
+      error: error.message,
+    });
   }
 };
+
+export const uploadImageFile = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "File upload failed or not selected",
+        });
+    }
+    const imageUrl = req.file.path; 
+    const { id } = req.params;
+     const updateuser = await userdata.findByIdAndUpdate(
+       id,
+       { $set: { profileImage: imageUrl } },
+       {
+         new: true,
+       }
+     );
+    console.log(updateuser);
+    
+     res.status(200).json({
+       success: true,
+       message: "Profile image updated successfully",
+       data: updateuser,
+     });
+  } catch (error) {
+    console.error(error);
+    console.log(req.file);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+}
+
+export const deleteImage = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await userdata.findById(id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (!user.profileImage) {
+      return res.status(400).json({
+        success: false,
+        message: "No image to delete",
+      });
+    }
+
+    // Cloudinary public id extract
+    const publicId = user.profileImage.split("/").pop().split(".")[0];
+
+    await cloudinary.uploader.destroy(publicId);
+
+    user.profileImage = "";
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile image deleted",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+    });
+  }
+
+}
+

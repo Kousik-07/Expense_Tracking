@@ -73,7 +73,7 @@ function Forget() {
   return (
     <div className="bg-gray-100 flex items-center justify-center min-h-screen">
       {/* Card Container */}
-      <div className="bg-white rounded-2xl shadow-xl flex w-[70%] overflow-hidden">
+      <div className="bg-white rounded-2xl shadow-xl flex w-[70%] md:w-[70%] overflow-hidden">
         {/* LEFT LOGIN FORM */}
         <div className="md:w-1/2 w-full p-12 flex flex-col justify-center">
           {token ? (
@@ -85,16 +85,7 @@ function Forget() {
               Forget Password
             </h2>
           )}
-
-          {/* Google Button */}
-          <div className="flex justify-center mb-4">
-            <div className="w-10 h-10 border rounded-full flex items-center justify-center text-lg font-bold">
-              G
-            </div>
-          </div>
-          <p className="text-gray-400 text-sm text-center mb-6">
-            or use your account
-          </p>
+          
           {/* Input Fields */}
           <div className="space-y-4">
             {token ? (
@@ -133,6 +124,7 @@ function Forget() {
                 </div>
               </Form>
             ) : (
+                
               <Form
                 name="forget-Form"
                 onFinish={onForgetPassword}

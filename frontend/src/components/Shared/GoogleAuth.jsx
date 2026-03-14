@@ -11,8 +11,6 @@ function GoogleAuth() {
             if (authResult["code"]) {
               console.log("Authorization Code:", authResult["code"]);
 
-              // Backend API call (Tomar backend-er route onujayi URL dao)
-              // { withCredentials: true } dite bhulo na jate cookie set hoy
               const response = await http.post(
                 "/api/user/google-login",
                 {
@@ -23,7 +21,7 @@ function GoogleAuth() {
 
               
                 toast.success("Login Successful!");
-                navigate("/app"); // Login hoye gele dashboard-e niye jao
+                navigate("/app");
               
             }
             

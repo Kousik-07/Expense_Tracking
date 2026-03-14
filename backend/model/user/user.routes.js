@@ -9,8 +9,12 @@ import {
   logOut,
   getData,
   googleLogin,
+  updateUser,
+  uploadImageFile,
+  deleteImage,
 } from "./user.controller.js";
 import { userGuird, verifyTokenGuird } from "../../src/middleWare/guird.middle.js";
+import { cloudinaryFileUploader } from "../../src/middleWare/fileUploder.js";
 
 const router =Router()
 router.post("/signup", createuser)
@@ -25,5 +29,7 @@ router.get("/session", userGuird, (req, res) => {
 router.post("/verify-token",verifyTokenGuird, verifyToken);
 router.put("/change-password", verifyTokenGuird, changePassword);
 router.post("/google-login",googleLogin)
-
+router.put("/updateuser/:id", userGuird, updateUser);
+router.put("/uploadFile/:id", cloudinaryFileUploader.single('profileImage'),uploadImageFile);
+router.delete("/deleteProfileImage/:id",deleteImage);
 export default router;

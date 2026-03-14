@@ -111,7 +111,6 @@ function Reports() {
      return data;
    }, [transections, dateFilter, sortFilter, typeFilter]);
 
-  // console.log(filteredTransactions);
   
   //PDF Export-------------------------------------
   const handleDownloadPDF = () => {
@@ -143,7 +142,7 @@ function Reports() {
         head: [["Date", "Category", "Amount", "Type"]],
         body: tableRow,
         theme: "striped",
-        headStyles: { fillColor: [0, 136, 254] }, // আপনার চার্টের সাথে মিল রেখে কালার
+        headStyles: { fillColor: [0, 136, 254] },
       });
       doc.save("report.pdf");
       console.log("pdf download");
@@ -155,24 +154,27 @@ function Reports() {
   };
 
   return (
-    <div className="p-10">
-
+    <div className="p-4 md:p-10">
       {/* HEADER */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold">Reports / Analytics</h2>
+      <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
+        <h2 className="text-xl md:text-2xl font-semibold">
+          Reports / Analytics
+        </h2>
+
         <button
           onClick={handleDownloadPDF}
-          className="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600"
+          className="bg-green-500 text-white px-5 py-2 rounded-lg hover:bg-green-600 cursor-pointer w-full md:w-auto"
         >
           Export
         </button>
       </div>
+
       {/* FILTERS */}
-      <div className="flex gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row flex-wrap gap-4 mb-8">
         <select
           value={dateFilter}
           onChange={(e) => setDateFilter(e.target.value)}
-          className="border px-4 py-2 rounded-lg text-gray-600"
+          className="border px-4 py-2 rounded-lg text-gray-600 w-full sm:w-auto"
         >
           <option value="thisMonth">This Month</option>
           <option value="lastMonth">Last Month</option>
@@ -185,7 +187,7 @@ function Reports() {
         <select
           value={sortFilter}
           onChange={(e) => setSortFilter(e.target.value)}
-          className="border px-4 py-2 rounded-lg text-gray-600"
+          className="border px-4 py-2 rounded-lg text-gray-600 w-full sm:w-auto"
         >
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
@@ -196,25 +198,28 @@ function Reports() {
         <select
           value={typeFilter}
           onChange={(e) => setTypeFilter(e.target.value)}
-          className="border px-4 py-2 rounded-lg text-gray-600"
+          className="border px-4 py-2 rounded-lg text-gray-600 w-full sm:w-auto"
         >
           <option value="">All Types</option>
           <option value="expense">Expense</option>
           <option value="income">Income</option>
         </select>
       </div>
+
       {/* FINANCIAL OVERVIEW */}
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-semibold">Financial Overview</h3>
+        <h3 className="text-lg md:text-xl font-semibold">Financial Overview</h3>
       </div>
+
       {/* CHART GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {/* Income vs Expense */}
-        <div className="bg-white p-6 rounded-xl shadow">
+        <div className="bg-white p-4 md:p-6 rounded-xl shadow">
           <div className="flex justify-between mb-3">
             <h4 className="font-semibold">Income vs Expense</h4>
             <span className="text-sm text-gray-400">Monthly trend</span>
           </div>
+
           <div className="h-64 md:h-90 border rounded flex items-center justify-center text-gray-400">
             <ChartLine
               transectionchart={chart}
@@ -223,17 +228,21 @@ function Reports() {
             />
           </div>
         </div>
+
         {/* Spending by Category */}
-        <div className="bg-white p-6 rounded-xl shadow">
+        <div className="bg-white p-4 md:p-6 rounded-xl shadow">
           <h4 className="font-semibold mb-3">Spending by Category</h4>
-          <div className="h-64 md:h-90  border rounded flex items-center justify-center text-gray-400">
+
+          <div className="h-64 md:h-90 border rounded flex items-center justify-center text-gray-400">
             <ChartBar data={barChart} dataKeyX="name" dataKeyY="value" />
           </div>
         </div>
       </div>
+
       {/* TOP EXPENSES */}
-      <div className="bg-white p-6 rounded-xl shadow w-full md:w-1/2">
+      <div className="bg-white p-4 md:p-6 rounded-xl shadow w-full md:w-1/2">
         <h4 className="font-semibold mb-3">Top 5 Expenses</h4>
+
         <div className="h-64 md:h-90 border rounded flex items-center justify-center text-gray-400">
           <ChartPie data={topChart} dataKey1="category" dataKey2="amount" />
         </div>
