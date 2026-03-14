@@ -62,9 +62,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "wrong password" })
         const token = await createToken(user)
         res.cookie("authToken", token, {
-
           maxAge: 86400000,
-          domain: undefined,
           secure: true,       
           sameSite: "none",    
             path:"/",
