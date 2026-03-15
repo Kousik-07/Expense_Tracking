@@ -78,8 +78,8 @@ export const logOut = async (req, res) => {
   try {
      res.cookie("authToken", null, {
        httpOnly: true,
-       secure: process.env.ENVIROMENT !== "DEV",
-       sameSite: process.env.ENVIROMENT === "DEV" ? "lax" : "none",
+       secure: process.env.ENVIRONMENT !== "DEV",
+       sameSite: process.env.ENVIRONMENT === "DEV" ? "lax" : "none",
        path: "/",
        domain: undefined,
        maxAge: 0,
