@@ -89,6 +89,7 @@ export const logOut = async (req, res) => {
     res.status(500).json({ message: error.message || "Logout failed" });
   }
 };
+
 export const forgetPassword = async (req, res) => {
   try {
       const {email} = req.body;
@@ -104,11 +105,11 @@ export const forgetPassword = async (req, res) => {
         forgotPasswordTemplate(user.fullname,link)
       );
       if (!send) {
-        res.status(424).json({message:"Email sending failed!!"})
+        return res.status(424).json({message:"Email sending failed!!"})
       }
-      res.json({message:"please check your email"})
+     return res.json({message:"please check your email"})
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
 
