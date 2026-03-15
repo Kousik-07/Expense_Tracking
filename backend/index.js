@@ -1,6 +1,7 @@
 import express from "express"
 import router from "./model/user/user.routes.js";
 const app = express()
+app.set("trust proxy", 1);
 import dotenv from "dotenv"
 dotenv.config();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use(
     credentials:true
   })
 );
+
 
 
 // app level middleware

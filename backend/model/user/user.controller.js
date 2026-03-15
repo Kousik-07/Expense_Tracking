@@ -62,12 +62,11 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: "wrong password" })
         const token = await createToken(user)
         res.cookie("authToken", token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
           maxAge: 86400000,
-          secure: true,       
-          sameSite: "none",    
-            path:"/",
-          httpOnly:true
-          
+          path: "/",
         });
         res.json({message:"login done"})
     } catch (error) {
@@ -172,11 +171,8 @@ export const googleLogin = async (req, res) => {
       });
     }
 
-    // exchange authorization code for tokens
     const { tokens } = await oauth2client.getToken(code);
     oauth2client.setCredentials(tokens);
-
-    // get user info from google
     const oauth2 = google.oauth2({
       version: "v2",
       auth: oauth2client,
@@ -190,8 +186,6 @@ export const googleLogin = async (req, res) => {
         message: "Google account email not found",
       });
     }
-
-    // check user in database
     let user = await userdata.findOne({ email: data.email });
 
     // create user if not exists
@@ -207,10 +201,10 @@ export const googleLogin = async (req, res) => {
 
     // set cookie
     res.cookie("authToken", token, {
-      maxAge: 24 * 60 * 60 * 1000,
       httpOnly: true,
-      secure: process.env.ENVIRONMENT === "PROD",
-      sameSite: process.env.ENVIRONMENT === "PROD" ? "none" : "lax",
+      secure: true,
+      sameSite: "none",
+      maxAge: 86400000,
       path: "/",
     });
 
